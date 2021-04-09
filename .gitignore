@@ -40,3 +40,5 @@ luac.out
 *.hex
 
 /target/Lightroom/
+/.idea/
+/LRKomoot.iml

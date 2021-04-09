@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-#export SCRIPT_DIR="$(dirname "$0")"
 cd "$(dirname "$0")"
-export $SCRIPT_DIR="$(pwd)"
-echo  $SCRIPT_DIR
+export SCRIPT_DIR="$(pwd)"
 export PACKAGE_NAME=lrkomoot
 export TARGET_DIR=$SCRIPT_DIR/target/Lightroom
 export SOURCE_DIR=$SCRIPT_DIR/src/main/lua/$PACKAGE_NAME.lrdevplugin
