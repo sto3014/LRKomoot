@@ -1,0 +1,8 @@
+"$$$/Komoot/PluginName=Komoot"
+"$$$/Metadata/Tagset/Title=Komoot"
+"$$$/Metadata/OrigLabel=Standard"
+"$$$/Metadata/CusLabel=Komoot"
+"$$$/Metadata/ExifLabel=EXIF"
+"$$$/Metadata/PluginManager=Komoot Metadata"
+"$$$/Metadata/Fields/Display/KomootURL=Komoot URL"
+"$$$/Metadata/Fields/TourName=Komoot Tour"
