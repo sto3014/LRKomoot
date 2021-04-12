@@ -1,11 +1,6 @@
 require ("PluginInit")
 local LrApplication = import("LrApplication")
 local LrLogger = import("LrLogger")
-local LrTasks = import("LrTasks")
-local LrDialogs = import 'LrDialogs'
-local LrErrors = import 'LrErrors'
-local LrFunctionContext = import 'LrFunctionContext'
-local LrPrefs = import 'LrPrefs'
 local logger = LrLogger("KomootLrLogger")
 logger:enable("logfile")
 --
