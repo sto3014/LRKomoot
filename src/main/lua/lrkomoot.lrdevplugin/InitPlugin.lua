@@ -6,9 +6,6 @@
 -------------------------------------------------------------------------------
 local LrPrefs = import "LrPrefs"
 
---local LrMobdebug = import 'LrMobdebug' -- Import LR/ZeroBrane debug module
---LrMobdebug.start()
-
 local logger = require("Logger")
 -------------------------------------------------------------------------------
 
@@ -20,14 +17,13 @@ local function resetPrefs()
     local prefs = LrPrefs.prefsForPlugin()
     prefs.showTourDialog=nil
     prefs.defaultSubFolder = nil
+    prefs.lastExportedKomootURL = nil
+    prefs.openAnnotateURL = nil
 end
 
 -------------------------------------------------------------------------------
 
 local function init()
-    --LrMobdebug.on()
-
-
     -- resetPrefs()
 
     logger.trace("Init plug-in")
@@ -40,6 +36,10 @@ local function init()
 
     if ( prefs.defaultSubFolder == nil or prefs.defaultSubFolder == "") then
         prefs.defaultSubFolder = "LR2Komoot"
+    end
+
+    if ( prefs.openAnnotateURL == nil) then
+        prefs.openAnnotateURL = true
     end
 
     logger.trace("Init done.")

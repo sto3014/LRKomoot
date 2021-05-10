@@ -26,6 +26,18 @@ function InfoProvider.sectionsForTopOfDialog(f, _)
                     --unchecked_value = false,
                 },
             },
+            f:row {
+                f:static_text {
+                    title = LOC("$$$/Komoot/AnnotateOpen/Title=After Export"),
+                    width_in_chars = 19,
+                },
+                f:checkbox {
+                    title = LOC("$$$/Komoot/AnnotateOpen/Open=Open Annotate Page"),
+                    value = LrView.bind("openAnnotateURL"),
+                    --checked_value = true, -- this is the initial state
+                    --unchecked_value = false,
+                },
+            },
         },
     }
 end

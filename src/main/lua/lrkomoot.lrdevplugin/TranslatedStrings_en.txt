@@ -7,6 +7,7 @@
 "$$$/Komoot/Metadata/Fields/Display/KomootURL=Komoot URL"
 "$$$/Komoot/Metadata/Fields/TourName=Komoot Tour"
 "$$$/Komoot/PluginSettings=Plug-in Settings"
+
 "$$$/Komoot/TourNameDialog/Title=Tour name dialog:"
 "$$$/Komoot/TourNameDialog/Show=Show"
 
@@ -15,3 +16,9 @@
 "$$$/Komoot/TourName/DiffNames=Photos have different tour names."
 "$$$/Komoot/TourName/Empty=^1 tour names are not set."
 "$$$/Komoot/TourName/AllEmpty=All tour names are not set."
+
+"$$$/Komoot/AnnotateOpen/Title=After Export"
+"$$$/Komoot/AnnotateOpen/Open=Open Annotate Page"
+
+"$$$/Komoot/URL/NotValid=Komoot URL does not seem to be valid."
+"$$$/Komoot/URL/NotOpenBrowser=URL '^1' will not be opened."
