@@ -18,6 +18,9 @@ return {
 		title = "Komoot",
 		file = "KomootExportServiceProvider.lua",
 	},
+
+	LrInitPlugin = "InitPlugin.lua",
+	LrPluginInfoProvider = "InfoProvider.lua",
 	
 	VERSION = { major=1, minor=0, revision=1, build=0, },
 

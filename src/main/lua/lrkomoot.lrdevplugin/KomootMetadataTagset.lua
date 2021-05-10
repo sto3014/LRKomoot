@@ -1,10 +1,10 @@
 return{
 
-	title = LOC "$$$/Metadata/Tagset/Title=Custom Metadata",
+	title = LOC "$$$/Komoot/Metadata/Tagset/Title=Custom Metadata",
 	id = 'CustomMetadataTagset',
 	
 	items = {
-		{ 'com.adobe.label', label = LOC "$$$/Metadata/OrigLabel=Standard Metadata" },
+		{ 'com.adobe.label', label = LOC "$$$/Komoot/Metadata/OrigLabel=Standard Metadata" },
 		'com.adobe.filename',
 		'com.adobe.folder',
 		
@@ -21,7 +21,7 @@ return{
 		'com.adobe.separator',
 		{
 			formatter = "com.adobe.label",
-			label = LOC "$$$/Metadata/Tagset/Title=Komoot",
+			label = LOC "$$$/Komoot/Metadata/Tagset/Title=Komoot",
 		},
 
 		'at.homebrew.lrkomoot.tourName',
@@ -31,7 +31,7 @@ return{
 		"com.adobe.separator",
 		{
 			formatter = "com.adobe.label",
-			label = LOC "$$$/Metadata/ExifLabel=EXIF",
+			label = LOC "$$$/Komoot/Metadata/ExifLabel=EXIF",
 		},
 
 		"com.adobe.imageFileDimensions",		-- dimensions

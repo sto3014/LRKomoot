@@ -12,7 +12,7 @@ local KomootMetadataDefinition = {
 
         {
             id = 'tourName',
-            title = LOC "$$$/Metadata/Fields/TourName=TourName",
+            title = LOC "$$$/Komoot/Metadata/Fields/TourName=TourName",
             dataType = 'string', -- Specifies the data type for this field.
             browsable = true,
             searchable = true,
@@ -20,7 +20,7 @@ local KomootMetadataDefinition = {
 
         {
             id = 'komootUrl',
-            title = LOC "$$$/Metadata/Fields/Display/KomootURL=Komoot URL",
+            title = LOC "$$$/Komoot/Metadata/Fields/Display/KomootURL=Komoot URL",
             version = 1,
             dataType = 'url',
             searchable = true,
