@@ -4,11 +4,11 @@
 "$$$/Komoot/Metadata/CusLabel=Komoot"
 "$$$/Komoot/Metadata/ExifLabel=EXIF"
 "$$$/Komoot/Metadata/PluginManager=Komoot Metadata"
-"$$$/Komoot/Metadata/Fields/Display/KomootURL=Komoot URL"
+"$$$/Komoot/Metadata/Fields/Display/KomootURL=Tour URL"
 "$$$/Komoot/Metadata/Fields/TourName=Komoot Tour"
 "$$$/Komoot/PluginSettings=Plug-in Settings"
 
-"$$$/Komoot/TourNameDialog/Title=Tour name dialog:"
+"$$$/Komoot/TourNameDialog/Title=Conflict export directory:"
 "$$$/Komoot/TourNameDialog/Show=Show"
 
 "$$$/Komoot/TourName/DiffBoth=Photos have different tour names and ^1 tour names are not set."
@@ -20,5 +20,6 @@
 "$$$/Komoot/AnnotateOpen/Title=After Export"
 "$$$/Komoot/AnnotateOpen/Open=Open Annotate Page"
 
-"$$$/Komoot/URL/NotValid=Komoot URL does not seem to be valid."
-"$$$/Komoot/URL/NotOpenBrowser=URL '^1' will not be opened."
+"$$$/Komoot/URL/NotValid=No valid tour URL found."
+"$$$/Komoot/URL/MultiURLs=More than one valid tour URL found."
+"$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."

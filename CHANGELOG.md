@@ -14,9 +14,10 @@ Creation.
 ### Changed
 ### Fixed
 
-## [1.0.1.0] - 2021-05-10
+## [1.1.0.0] - 2021-05-10
 
 ### Added
+After an export the Komoot annotation page will be opened.
 ### Changed
 If tour names are not set or different, a standard subfolder is taken (LR2Komoot).
 A dialog displays an info why and what happened. The dialog may be suppressed in

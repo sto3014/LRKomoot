@@ -4,11 +4,11 @@
 "$$$/Komoot/Metadata/CusLabel=Komoot""
 "$$$/Komoot/Metadata/ExifLabel=EXIF"
 "$$$/Komoot/Metadata/PluginManager=Komoot Metadaten"
-"$$$/Komoot/Metadata/Fields/Display/KomootURL=Komoot URL"
+"$$$/Komoot/Metadata/Fields/Display/KomootURL=Tour URL"
 "$$$/Komoot/Metadata/Fields/TourName=Komoot Tour"
 "$$$/Komoot/PluginSettings=Plug-in Einstellungen"
 
-"$$$/Komoot/TourNameDialog/Title=Tour Name Dialog:"
+"$$$/Komoot/TourNameDialog/Title=Konflikt Ausgabeverzeichnis:"
 "$$$/Komoot/TourNameDialog/Show=Anzeigen"
 
 "$$$/Komoot/TourName/DiffBoth=Die Fotos haben unterschiedliche Tour Namen und ^1 Tour Namen sind nicht gesetzt."
@@ -17,8 +17,9 @@
 "$$$/Komoot/TourName/Empty=^1 Tour Namen sind nicht gesetzt."
 "$$$/Komoot/TourName/AllEmpty=Alle Tour Namen sind nicht gesetzt."
 
-"$$$/Komoot/AnnotateOpen/Title=Nach Export"
+"$$$/Komoot/AnnotateOpen/Title=Nach Ausgabe"
 "$$$/Komoot/AnnotateOpen/Open=Öffne Anmerkungseite"
 
-"$$$/Komoot/URL/NotValid=Komoot URL scheint nicht gültig zu sein."
-"$$$/Komoot/URL/NotOpenBrowser=URL '^1' wird nicht geöffnet."
+"$$$/Komoot/URL/NotValid=Keine gültige Tour URL gefunden."
+"$$$/Komoot/URL/MultiURLs=Mehr als eine gültige Tour URL found."
+"$$$/Komoot/URL/NotOpenBrowser=Anmerkungsseite wird nicht geöffnet."
