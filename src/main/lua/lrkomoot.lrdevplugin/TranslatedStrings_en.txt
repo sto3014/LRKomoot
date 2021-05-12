@@ -11,10 +11,13 @@
 "$$$/Komoot/TourNameDialog/Title=Conflict export directory:"
 "$$$/Komoot/TourNameDialog/Show=Show"
 
-"$$$/Komoot/TourName/DiffBoth=Photos have different tour names and ^1 tour names are not set."
+"$$$/Komoot/TourName/DiffBothMany=Photos have ^1 different tour names and ^2 tour names are not set."
+"$$$/Komoot/TourName/DiffBothOne=Photos have ^1 different tour names and one tour name is not set."
+
 "$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'."
 "$$$/Komoot/TourName/DiffNames=Photos have different tour names."
-"$$$/Komoot/TourName/Empty=^1 tour names are not set."
+"$$$/Komoot/TourName/EmptyMany=^1 tour names are not set."
+"$$$/Komoot/TourName/EmptyOne=One tour name is not set."
 "$$$/Komoot/TourName/AllEmpty=All tour names are not set."
 
 "$$$/Komoot/AnnotateOpen/Title=After Export"
@@ -23,3 +26,6 @@
 "$$$/Komoot/URL/NotValid=No valid tour URL found."
 "$$$/Komoot/URL/MultiURLs=More than one valid tour URL found."
 "$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."
+
+"$$$/Komoot/ProgressMany=Export ^1 photos for Komoot"
+"$$$/Komoot/ProgressOne=Export one photo for Komoot"

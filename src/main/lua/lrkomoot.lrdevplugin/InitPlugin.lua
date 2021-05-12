@@ -17,7 +17,7 @@ local function resetPrefs()
     local prefs = LrPrefs.prefsForPlugin()
     prefs.showTourDialog=nil
     prefs.defaultSubFolder = nil
-    prefs.lastExportedKomootURL = nil
+    prefs.uniqueTourURL = nil
     prefs.openAnnotateURL = nil
 end
 

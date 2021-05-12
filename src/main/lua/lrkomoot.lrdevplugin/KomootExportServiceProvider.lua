@@ -1,3 +1,7 @@
+--[[---------------------------------------------------------------------------
+-- Created by Dieter Stockhausen
+-- Created on 11.04.21
+-----------------------------------------------------------------------------]]
 require("PluginInit")
 local LrApplication = import("LrApplication")
 local LrDialogs = import 'LrDialogs'
@@ -5,12 +9,10 @@ local LrPrefs = import("LrPrefs")
 local LrTasks = import("LrTasks")
 local logger = require("Logger")
 
--- local LrMobdebug = import 'LrMobdebug' -- Import LR/ZeroBrane debug module
--- LrMobdebug.start()
-
 -------------------------------------------------------------------------------
-
-local KomootExportServiceProvider = {
+--- Properties
+-------------------------------------------------------------------------------
+local exportServiceProvider = {
     allowFileFormats = {
         "JPEG",
         "TIFF",
@@ -21,10 +23,16 @@ local KomootExportServiceProvider = {
         "watermarking",
     },
 }
-
 -------------------------------------------------------------------------------
-
+--- Function to generate a subfolder according to the property tourName.
+--- Returns
+---     value of the first tourName found, if all photos have the same tourName.
+---         Photos with tourName not set will be ignored
+---     "LR2Komoot", if all photos have tourName not set, or if tourName is not
+---         unique.
+-------------------------------------------------------------------------------
 local function getSubFolder()
+
     logger.trace("Enter getSubFolder")
     local activeCatalog = LrApplication.activeCatalog()
     local photos = activeCatalog:getTargetPhotos()
@@ -33,6 +41,7 @@ local function getSubFolder()
     local photosNoTourName = {}
     local indexNoTour = 1
     local differentTours = false
+    local differentToursCount = 1
 
     for _, photo in ipairs(photos) do
         logger.trace("Photo: " .. photo:getFormattedMetadata("fileName"))
@@ -49,7 +58,7 @@ local function getSubFolder()
             else
                 if (previousSubfolder ~= currentSubFolder) then
                     differentTours = true
-                    break
+                    differentToursCount = differentToursCount + 1
                 end
             end
         end
@@ -60,7 +69,9 @@ local function getSubFolder()
     if (differentTours and #photosNoTourName > 0) then
         logger.trace("Different and empty tours found.")
         if (prefs.showTourDialog) then
-            LrDialogs.message(LOC("$$$/Komoot/TourName/DiffBoth=Photos have different tour names and ^1 tour names are not set.", photosNoTourName),
+            LrDialogs.message(#photosNoTourName > 1
+                    and LOC("$$$/Komoot/TourName/DiffBothMany=Photos have ^1 different tour names and ^2 tour names are not set.", differentToursCount, #photosNoTourName)
+                    or LOC("$$$/Komoot/TourName/DiffBothOne=Photos have ^1 different tour names and one tour name is not set.", differentToursCount),
                     LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", prefs.defaultSubFolder), "info")
         end
         subFolder = "LR2Komoot"
@@ -77,7 +88,9 @@ local function getSubFolder()
                 if (subFolder ~= nil and subFolder ~= "") then
                     logger.trace("Empty  tours found.")
                     if (prefs.showTourDialog) then
-                        LrDialogs.message(LOC("$$$/Komoot/TourName/Empty=^1 tour names are not set.", #photosNoTourName),
+                        LrDialogs.message(#photosNoTourName > 1
+                                and LOC("$$$/Komoot/TourName/EmptyMany=^1 tour names are not set.", #photosNoTourName)
+                                or LOC("$$$/Komoot/TourName/EmptyOne=One tour name is not set."),
                                 LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", subFolder), "info")
                     end
                 else
@@ -98,6 +111,18 @@ local function getSubFolder()
     return subFolder
 end
 
+-------------------------------------------------------------------------------
+--- Function to convert a tour URL to a URL which points to the annotation page
+--- of the tour
+--- The format of the tour URL is
+--- <protocol>://<komoot server>/tour/<tour id>[/...]
+--- Example
+---     https://www.komoot.de/tour/12345678
+---     https://www.komoot.de/tour/12345678/zoom
+--- Returns
+---     The annotation URL. Example:
+---         https://www.komoot.de/tour/12345678/annotate/photos
+---     nil, if the tour URL is not valid
 -------------------------------------------------------------------------------
 local function getAnnotateURL(anyTourUrl)
     logger.trace("Enter getAnnotateURL")
@@ -136,6 +161,11 @@ local function getAnnotateURL(anyTourUrl)
 end
 
 ----------------------------------------------------------------------------------
+--- Function extract the tour id out of a tour URL
+--- Returns
+---     The tour id
+---     nil, if no id could be found.
+-------------------------------------------------------------------------------------
 local function getTourID(anyTourUrl)
     logger.trace("Enter getTourID")
     if (anyTourUrl == nil or anyTourUrl == "") then
@@ -179,9 +209,19 @@ local function getTourID(anyTourUrl)
     end
 
 end
--------------------------------------------------------------------------------------
 
-local function getCurrentKomootURL()
+-------------------------------------------------------------------------------
+--- Function determines the unique tour URL
+--- Example
+---     https://www.komoot.de/tour/12345678
+---     https://www.komoot.de/tour/12345678/zoom
+--- Returns
+---     The tour URL for the first valid tour URL found.
+---         Empty URLs or URLs where no tour id were found are just ignored.
+---     nil, if the tour ids found are not unique, or if no tour id could be
+---         found at all
+-------------------------------------------------------------------------------
+local function getUniqueTourURL()
     logger.trace("Enter getCurrentKomootURL")
 
     local activeCatalog = LrApplication.activeCatalog()
@@ -213,7 +253,7 @@ local function getCurrentKomootURL()
         end
     end
 
-    if ( not differentTours) then
+    if (not differentTours) then
         if (firstValidURL == nil) then
             LrDialogs.message(LOC("$$$/Komoot/URL/NotValid=No valid Komoot URL found."),
                     LOC("$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."), "info")
@@ -232,8 +272,15 @@ local function getCurrentKomootURL()
     end
 end
 ----------------------------------------------------------------------------------
+--- hook updateExportSettings
+---     If use subfolder is checked in the export preset and there is no value
+---     defined for the subfolder, the subfolder will be set to a name of tour
+---
+---     If the annotation page should be opened after the export, the URL is
+---     determined.
+-------------------------------------------------------------------------------------
 
-function KomootExportServiceProvider.updateExportSettings (exportSettings)
+function exportServiceProvider.updateExportSettings (exportSettings)
     logger.trace("Enter updateExportSettings")
     if (exportSettings.LR_export_useSubfolder == true and exportSettings.LR_export_destinationPathSuffix == "") then
         subFolder = getSubFolder()
@@ -241,25 +288,37 @@ function KomootExportServiceProvider.updateExportSettings (exportSettings)
     end
     local prefs = LrPrefs.prefsForPlugin()
     if (prefs.openAnnotateURL) then
-        prefs.lastExportedKomootURL = getCurrentKomootURL()
+        prefs.uniqueTourURL = getUniqueTourURL()
     end
 
     logger.trace("Exit updateExportSettings")
 end
 
 ----------------------------------------------------------------------------------
+--- hook processRenderedPhotos
+---     Exports the photos.
+---
+---     Opens annotation URL after export
+-------------------------------------------------------------------------------------
+function exportServiceProvider.processRenderedPhotos(functionContext,
+                                                     exportContext)
 
-function KomootExportServiceProvider.processRenderedPhotos(functionContext,
-                                                           exportContext)
-    --LrMobdebug.on()
     local prefs = LrPrefs.prefsForPlugin()
     if prefs.hasErrors then
         return
     end
 
-    if (not prefs.openAnnotateURL) then
-        return
-    end
+    --
+    -- Export photos
+    --
+    local exportSession = exportContext.exportSession
+    local nPhotos = exportSession:countRenditions()
+    -- Progress bar
+    local progressScope = exportContext:configureProgress {
+        title = nPhotos > 1 and
+                LOC("$$$/Komoot/ProgressMany=Export ^1 photos for Komoot", nPhotos)
+                or LOC "$$$/Komoot/ProgressOne=Export one photo for Komoot",
+    }
 
     for i, rendition in exportContext:renditions { stopIfCanceled = true } do
         -- Wait for the upstream task to finish its work on this photo.
@@ -271,10 +330,17 @@ function KomootExportServiceProvider.processRenderedPhotos(functionContext,
         end
     end
 
-    logger.trace("lastExportedKomootURL: " .. tostring(prefs.lastExportedKomootURL))
 
-    if (prefs.lastExportedKomootURL ~= nil and prefs.lastExportedKomootURL ~= "") then
-        cmd = getAnnotateURL(prefs.lastExportedKomootURL)
+    --
+    -- Annotation page
+    --
+    if (not prefs.openAnnotateURL) then
+        return
+    end
+
+    logger.trace("Unique tour URL: " .. tostring(prefs.uniqueTourURL))
+    if (prefs.uniqueTourURL ~= nil and prefs.uniqueTourURL ~= "") then
+        cmd = getAnnotateURL(prefs.uniqueTourURL)
         logger.trace("Annotate URL: " .. tostring(cmd))
         if (cmd ~= nil and cmd ~= "") then
             if (WIN_ENV) then
@@ -284,12 +350,11 @@ function KomootExportServiceProvider.processRenderedPhotos(functionContext,
             end
             logger.trace("Execute: " .. cmd)
             local status = LrTasks.execute(cmd)
-
         end
     end
 
 end
--------------------------------------------------------------------------------
+
 -------------------------------------------------------------------------------
 
-return KomootExportServiceProvider
+return exportServiceProvider
