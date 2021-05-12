@@ -344,7 +344,7 @@ function exportServiceProvider.processRenderedPhotos(functionContext,
         logger.trace("Annotate URL: " .. tostring(cmd))
         if (cmd ~= nil and cmd ~= "") then
             if (WIN_ENV) then
-                cmd = '"start /wait /min "Komoot" ' .. cmd
+                cmd = 'start ' .. cmd
             else
                 cmd = 'open ' .. cmd
             end
