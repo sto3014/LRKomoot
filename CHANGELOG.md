@@ -14,11 +14,11 @@ Creation.
 ### Changed
 ### Fixed
 
-## [1.1.0.0] - 2021-05-10
+## [1.1.0.0] - 2021-05-13
 
 ### Added
 * Warning dialog for tour names during export.
-* After export the Komoot photo annotation page will be opened.
+* After export, the Komoot photo annotation page will be opened.
 ### Changed
 In case the export subfolder is determined by tour names, the logic has changed when not all photos 
 have the same tour name:

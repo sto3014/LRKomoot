@@ -1,7 +1,7 @@
 # LRKomoot
 
 # Features
-Lightroom Classic plugin which add some simple functionalities for the route planner [Komoot](https://www.komoot.com).
+Lightroom Classic plug-in which add some simple functionalities for the route planner [Komoot](https://www.komoot.com):
 * Komoot metadata
 * Export service
 * Library filter
