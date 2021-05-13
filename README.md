@@ -22,8 +22,7 @@ The Komoot metadata consists of two fields:
   Can hold the Komoot tour name. It will be used as subfolder during export.
   Must be manual maintained.
 * Tour URL  
-  Can hold the Komoot tour URL. The small button at the end of the filed 
-  brings you directly to the desired Komoot page. It used to open the photo annotation 
+  Can hold the Komoot tour URL. It is used to open the photo annotation 
   page after export.  
   Must be manual maintained.
 ## Export service
