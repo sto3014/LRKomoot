@@ -17,10 +17,17 @@ Creation.
 ## [1.1.0.0] - 2021-05-10
 
 ### Added
-After an export the Komoot annotation page will be opened.
+* Warning dialog for tour names during export.
+* After export the Komoot photo annotation page will be opened.
 ### Changed
-If tour names are not set or different, a standard subfolder is taken (LR2Komoot).
-A dialog displays an info why and what happened. The dialog may be suppressed in
-the plug-in setting.
+In case the export subfolder is determined by tour names, the logic has changed when not all photos 
+have the same tour name:
+* If no tour names are set at all, the subfolder "LR2Komoot" will be taken.
+* If at least one tour name is set, empty tour names are ignored.
+* If different tour names are found, the export subfolder is set to "LR2Komoot"
+
+The display name for two metadata fields were renamed:
+* Komoot URL was renamed to Tour URL
+* Komoot Tour was renamed to Tour Name
 
 ### Fixed

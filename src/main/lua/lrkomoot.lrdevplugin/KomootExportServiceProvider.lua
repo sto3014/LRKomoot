@@ -65,39 +65,54 @@ local function getSubFolder()
     end
 
     local prefs = LrPrefs.prefsForPlugin()
-
     if (differentTours and #photosNoTourName > 0) then
         logger.trace("Different and empty tours found.")
-        if (prefs.showTourDialog) then
-            LrDialogs.message(#photosNoTourName > 1
+        if (prefs.showTourNameWarnings) then
+            local status = LrDialogs.confirm(#photosNoTourName > 1
                     and LOC("$$$/Komoot/TourName/DiffBothMany=Photos have ^1 different tour names and ^2 tour names are not set.", differentToursCount, #photosNoTourName)
                     or LOC("$$$/Komoot/TourName/DiffBothOne=Photos have ^1 different tour names and one tour name is not set.", differentToursCount),
-                    LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", prefs.defaultSubFolder), "info")
+                    LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", prefs.defaultSubFolder))
+            if (status ~= "ok") then
+                prefs.exportCanceledByUser = true
+                return nil
+            end
         end
         subFolder = "LR2Komoot"
     else
         if (differentTours) then
             logger.trace("Different tours found.")
-            if (prefs.showTourDialog) then
-                LrDialogs.message(LOC("$$$/Komoot/TourName/DiffNames=Photos have different tour names."),
-                        LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", prefs.defaultSubFolder), "info")
+            if (prefs.showTourNameWarnings) then
+                local status = LrDialogs.confirm(LOC("$$$/Komoot/TourName/DiffNames=Photos have different tour names."),
+                        LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", prefs.defaultSubFolder))
+                if (status ~= "ok") then
+                    prefs.exportCanceledByUser = true
+                    return nil
+                end
             end
             subFolder = "LR2Komoot"
         else
             if (#photosNoTourName > 0) then
                 if (subFolder ~= nil and subFolder ~= "") then
                     logger.trace("Empty  tours found.")
-                    if (prefs.showTourDialog) then
-                        LrDialogs.message(#photosNoTourName > 1
+                    if (prefs.showTourNameWarnings) then
+                        local status = LrDialogs.confirm(#photosNoTourName > 1
                                 and LOC("$$$/Komoot/TourName/EmptyMany=^1 tour names are not set.", #photosNoTourName)
                                 or LOC("$$$/Komoot/TourName/EmptyOne=One tour name is not set."),
-                                LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", subFolder), "info")
+                                LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", subFolder))
+                        if (status ~= "ok") then
+                            prefs.exportCanceledByUser = true
+                            return nil
+                        end
                     end
                 else
                     logger.trace("Only empty  tours found.")
-                    if (prefs.showTourDialog) then
-                        LrDialogs.message(LOC("$$$/Komoot/TourName/AllEmpty=All tour names are not set."),
-                                LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", prefs.defaultSubFolder), "info")
+                    if (prefs.showTourNameWarnings) then
+                        local status = LrDialogs.confirm(LOC("$$$/Komoot/TourName/AllEmpty=All tour names are not set."),
+                                LOC("$$$/Komoot/TourName/ExportedIn=Photos will exported in subfolder '^1'.", prefs.defaultSubFolder))
+                        if (status ~= "ok") then
+                            prefs.exportCanceledByUser = true
+                            return nil
+                        end
                     end
                     subFolder = prefs.defaultSubFolder
                 end
@@ -161,7 +176,7 @@ local function getAnnotateURL(anyTourUrl)
 end
 
 ----------------------------------------------------------------------------------
---- Function extract the tour id out of a tour URL
+--- Function extract the tour id out of a tour URL.
 --- Returns
 ---     The tour id
 ---     nil, if no id could be found.
@@ -199,12 +214,12 @@ local function getTourID(anyTourUrl)
     end
 
     if (id == nil or id == "" or id:match("^%-?%d+$") == nil) then
+        logger.trace("Tour ID '" .. tostring(id) .. "' is  not valid")
         logger.trace("Exit getTourID")
-
         return nil
     else
+        logger.trace("Tour ID: " .. tostring(id))
         logger.trace("Exit getTourID")
-
         return id
     end
 
@@ -222,7 +237,7 @@ end
 ---         found at all
 -------------------------------------------------------------------------------
 local function getUniqueTourURL()
-    logger.trace("Enter getCurrentKomootURL")
+    logger.trace("Enter getUniqueTourURL")
 
     local activeCatalog = LrApplication.activeCatalog()
     local photos = activeCatalog:getTargetPhotos()
@@ -230,14 +245,15 @@ local function getUniqueTourURL()
     local prevID = ""
     local tourID
     local differentTours = false
+    local invalidTourIDs = 0
+    local notSetTourIDs = 0
 
     for _, photo in ipairs(photos) do
         logger.trace("Photo: " .. photo:getFormattedMetadata("fileName"))
         local tourURL = (photo:getPropertyForPlugin(PluginInit.pluginID, 'komootUrl'))
-        logger.trace("Komoot URL: " .. tostring(tourURL))
+        logger.trace("Tour URL: " .. tostring(tourURL))
         if (tourURL ~= nil and tourURL ~= "") then
             tourID = getTourID(tourURL)
-            logger.trace("Tour ID: " .. tostring(tourID))
             if (tourID ~= nil) then
                 firstValidURL = tourURL
                 if (prevID == "") then
@@ -249,25 +265,89 @@ local function getUniqueTourURL()
                         break
                     end
                 end
+            else
+                invalidTourIDs = invalidTourIDs + 1
             end
+        else
+            notSetTourIDs = notSetTourIDs + 1
         end
     end
 
+    local prefs = LrPrefs.prefsForPlugin()
+
     if (not differentTours) then
         if (firstValidURL == nil) then
-            LrDialogs.message(LOC("$$$/Komoot/URL/NotValid=No valid Komoot URL found."),
-                    LOC("$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."), "info")
-            logger.trace("No valid Komoot URL found.")
+            logger.trace("No valid Tour URL found.")
+            if (prefs.showTourURLWarnings) then
+                local status = LrDialogs.confirm(LOC("$$$/Komoot/URL/NotValid=No valid tour URL found."),
+                        LOC("$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."))
+                if (status ~= "ok") then
+                    prefs.exportCanceledByUser = true
+                    return nil
+                end
+            end
         else
-            logger.trace("First valid Komoot URL will be used: " .. tostring(firstValidURL))
-            logger.trace("Exit getCurrentKomootURL")
+            if (invalidTourIDs == 0 and notSetTourIDs == 0) then
+                logger.trace("First valid tour URL will be used: " .. tostring(firstValidURL))
+                logger.trace("Exit getUniqueTourURL")
+            else
+                if (invalidTourIDs > 0 and notSetTourIDs == 0) then
+                    logger.trace("Invalid tour URL found.")
+                    if (prefs.showTourURLWarnings) then
+                        local status = LrDialogs.confirm(
+                                invalidTourIDs > 1
+                                        and LOC("$$$/Komoot/URL/HasInvalidURLMany=^1 tour URLs are invalid.", invalidTourIDs)
+                                        or LOC("$$$/Komoot/URL/HasInvalidURLOne=One tour URL is invalid."),
+                                LOC("$$$/Komoot/URL/OpenBrowserInValidURLs=Annotation page will be opened with the valid URL found."))
+                        if (status ~= "ok") then
+                            prefs.exportCanceledByUser = true
+                            return nil
+                        end
+
+                    end
+                else
+                    if (invalidTourIDs == 0 and notSetTourIDs > 0) then
+                        logger.trace("Not set tour URL found.")
+                        if (prefs.showTourURLWarnings) then
+                            local status = LrDialogs.confirm(
+                                    notSetTourIDs > 1
+                                            and LOC("$$$/Komoot/URL/HasNotSetURLMany=^1 tour URLs are not set.", notSetTourIDs)
+                                            or LOC("$$$/Komoot/URL/HasNotSetURLOne=One tour URL is not set."),
+                                    LOC("$$$/Komoot/URL/OpenBrowserInValidURLs=Annotation page will be opened with the valid URL found."))
+                            if (status ~= "ok") then
+                                prefs.exportCanceledByUser = true
+                                return nil
+                            end
+
+                        end
+                    else
+                        logger.trace("Invalid and not set tour URL found.")
+                        if (prefs.showTourURLWarnings) then
+                            local status = LrDialogs.confirm(
+                                    LOC("$$$/Komoot/URL/HasInvalidAndNotSetURLMany=^1 tour URLs are invalid resp. not set.", invalidTourIDs + notSetTourIDs),
+                                    LOC("$$$/Komoot/URL/OpenBrowserInValidURLs=Annotation page will be opened with the valid URL found."))
+                            if (status ~= "ok") then
+                                prefs.exportCanceledByUser = true
+                                return nil
+                            end
+                        end
+                    end
+                end
+            end
         end
         return firstValidURL
     else
-        LrDialogs.message(LOC("$$$/Komoot/URL/MultiURLs=More than one valid tour URL found."),
-                LOC("$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."), "info")
-        logger.trace("Different tours found. No Komoot URL can be taken.")
-        logger.trace("Exit getCurrentKomootURL")
+        logger.trace("Different tours found. No Tour URL can be taken.")
+        if (prefs.showTourURLWarnings) then
+            local status = LrDialogs.confirm(LOC("$$$/Komoot/URL/MultiURLs=More than one valid tour URL found."),
+                    LOC("$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."))
+            if (status ~= "ok") then
+                prefs.exportCanceledByUser = true
+                return nil
+            end
+
+        end
+        logger.trace("Exit getUniqueTourURL")
         return nil
     end
 end
@@ -282,13 +362,25 @@ end
 
 function exportServiceProvider.updateExportSettings (exportSettings)
     logger.trace("Enter updateExportSettings")
+    local prefs = LrPrefs.prefsForPlugin()
+    prefs.exportCanceledByUser = false
+
     if (exportSettings.LR_export_useSubfolder == true and exportSettings.LR_export_destinationPathSuffix == "") then
-        subFolder = getSubFolder()
+        local subFolder = getSubFolder()
+
+        if (prefs.exportCanceledByUser) then
+            logger.trace("Export interrupted by user.")
+            return
+        end
         exportSettings.LR_export_destinationPathSuffix = subFolder
     end
-    local prefs = LrPrefs.prefsForPlugin()
+
     if (prefs.openAnnotateURL) then
         prefs.uniqueTourURL = getUniqueTourURL()
+        if (prefs.exportCanceledByUser) then
+            logger.trace("Export interrupted by user.")
+            return
+        end
     end
 
     logger.trace("Exit updateExportSettings")
@@ -304,7 +396,7 @@ function exportServiceProvider.processRenderedPhotos(functionContext,
                                                      exportContext)
 
     local prefs = LrPrefs.prefsForPlugin()
-    if prefs.hasErrors then
+    if prefs.hasErrors or prefs.exportCanceledByUser then
         return
     end
 

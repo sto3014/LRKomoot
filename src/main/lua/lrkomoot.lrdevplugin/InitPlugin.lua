@@ -15,7 +15,10 @@ local InitProvider = {}
 
 local function resetPrefs()
     local prefs = LrPrefs.prefsForPlugin()
-    prefs.showTourDialog=nil
+    prefs.hasErrors = nil
+    prefs.exportCanceledByUser=nil
+    prefs.showTourNameWarnings=nil
+    prefs.showTourURLWarnings=nil
     prefs.defaultSubFolder = nil
     prefs.uniqueTourURL = nil
     prefs.openAnnotateURL = nil
@@ -29,9 +32,13 @@ local function init()
     logger.trace("Init plug-in")
     local prefs = LrPrefs.prefsForPlugin()
     prefs.hasErrors = false
+    prefs.exportCanceledByUser = false
 
-    if ( prefs.showTourDialog == nil) then
-        prefs.showTourDialog = true
+    if ( prefs.showTourNameWarnings == nil) then
+        prefs.showTourNameWarnings = true
+    end
+    if ( prefs.showTourURLWarnings == nil) then
+        prefs.showTourURLWarnings = true
     end
 
     if ( prefs.defaultSubFolder == nil or prefs.defaultSubFolder == "") then

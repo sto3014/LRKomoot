@@ -5,11 +5,12 @@
 "$$$/Komoot/Metadata/ExifLabel=EXIF"
 "$$$/Komoot/Metadata/PluginManager=Komoot Metadata"
 "$$$/Komoot/Metadata/Fields/Display/KomootURL=Tour URL"
-"$$$/Komoot/Metadata/Fields/TourName=Komoot Tour"
+"$$$/Komoot/Metadata/Fields/TourName=Tour Name"
 "$$$/Komoot/PluginSettings=Plug-in Settings"
 
-"$$$/Komoot/TourNameDialog/Title=Conflict export directory:"
-"$$$/Komoot/TourNameDialog/Show=Show"
+"$$$/Komoot/ShowWarnings=Show warnings:"
+"$$$/Komoot/TourNameWarnings/Show=Tour Names"
+"$$$/Komoot/TourURLWarnings/Show=Tour URLs"
 
 "$$$/Komoot/TourName/DiffBothMany=Photos have ^1 different tour names and ^2 tour names are not set."
 "$$$/Komoot/TourName/DiffBothOne=Photos have ^1 different tour names and one tour name is not set."
@@ -29,3 +30,11 @@
 
 "$$$/Komoot/ProgressMany=Export ^1 photos for Komoot"
 "$$$/Komoot/ProgressOne=Export one photo for Komoot"
+
+"$$$/Komoot/URL/HasInvalidURLMany=^1 tour URLs are invalid."
+"$$$/Komoot/URL/HasInvalidURLOne=One tour URL is invalid."
+"$$$/Komoot/URL/OpenBrowserInValidURLs=Annotation page will be opened with the valid URL found."
+
+"$$$/Komoot/URL/HasNotSetURLMany=^1 tour URLs are not set."
+"$$$/Komoot/URL/HasNotSetURLOne=One tour URL is not set."
+"$$$/Komoot/URL/HasInvalidAndNotSetURLMany=^1 tour URLs are invalid resp. not set."

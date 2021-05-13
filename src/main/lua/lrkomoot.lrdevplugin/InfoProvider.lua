@@ -14,18 +14,7 @@ function InfoProvider.sectionsForTopOfDialog(f, _)
         {
             title = LOC("$$$/Komoot/PluginSettings=Plug-in Settings"),
             bind_to_object = prefs,
-            f:row {
-                f:static_text {
-                    title = LOC("$$$/Komoot/TourNameDialog/Title=Tour name dialog"),
-                    width_in_chars = 19,
-                },
-                f:checkbox {
-                    title = LOC("$$$/Komoot/TourNameDialog/Show=Show"),
-                    value = LrView.bind("showTourDialog"),
-                    --checked_value = true, -- this is the initial state
-                    --unchecked_value = false,
-                },
-            },
+
             f:row {
                 f:static_text {
                     title = LOC("$$$/Komoot/AnnotateOpen/Title=After Export"),
@@ -38,6 +27,26 @@ function InfoProvider.sectionsForTopOfDialog(f, _)
                     --unchecked_value = false,
                 },
             },
+
+            f:row {
+                f:static_text {
+                    title = LOC("$$$/Komoot/ShowWarnings=Show warnings:"),
+                    width_in_chars = 19,
+                },
+                f:checkbox {
+                    title = LOC("$$$/Komoot/TourNameWarnings/Show=Tour Names"),
+                    value = LrView.bind("showTourNameWarnings"),
+                    --checked_value = true, -- this is the initial state
+                    --unchecked_value = false,
+                },
+                f:checkbox {
+                    title = LOC("$$$/Komoot/TourURLWarnings/Show=Tour URLs"),
+                    value = LrView.bind("showTourURLWarnings"),
+                    --checked_value = true, -- this is the initial state
+                    --unchecked_value = false,
+                },
+            },
+
         },
     }
 end
