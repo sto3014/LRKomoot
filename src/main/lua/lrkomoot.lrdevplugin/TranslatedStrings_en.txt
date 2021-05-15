@@ -28,8 +28,8 @@
 "$$$/Komoot/URL/MultiURLs=More than one valid tour URL found."
 "$$$/Komoot/URL/NotOpenBrowser=Annotation page will not be opened."
 
-"$$$/Komoot/ProgressMany=Export ^1 photos for Komoot"
-"$$$/Komoot/ProgressOne=Export one photo for Komoot"
+"$$$/Komoot/ProgressMany=Export ^1 photos to Komoot"
+"$$$/Komoot/ProgressOne=Export one photo to Komoot"
 
 "$$$/Komoot/URL/HasInvalidURLMany=^1 tour URLs are invalid."
 "$$$/Komoot/URL/HasInvalidURLOne=One tour URL is invalid."
