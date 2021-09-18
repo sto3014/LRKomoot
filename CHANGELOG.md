@@ -31,3 +31,11 @@ The display name for two metadata fields were renamed:
 * Komoot Tour was renamed to Tour Name
 
 ### Fixed
+
+## [1.1.1.0] - 2021-09-18
+
+### Added
+* Supports Tour URL which points to previewMap.
+### Changed
+### Fixed
+

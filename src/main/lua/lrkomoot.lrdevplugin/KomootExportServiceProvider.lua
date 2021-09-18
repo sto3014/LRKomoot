@@ -163,7 +163,13 @@ local function getAnnotateURL(anyTourUrl)
         if (count == 4) then
             idxSlash = string.find(anyTourUrl, "/", idxSlash)
             if (idxSlash == nil) then
-                annotateURL = anyTourUrl .. "/annotate/photos"
+                local idxHash=1
+                idxHash = string.find(anyTourUrl, "#", idxHash)
+                if ( idxHash == nil) then
+                    annotateURL = anyTourUrl .. "/annotate/photos"
+                else
+                    annotateURL = string.sub(anyTourUrl, 1, idxHash - 1) .. "/annotate/photos"
+                end
             else
                 annotateURL = string.sub(anyTourUrl, 1, idxSlash - 1) .. "/annotate/photos"
             end
@@ -186,6 +192,7 @@ local function getTourID(anyTourUrl)
     if (anyTourUrl == nil or anyTourUrl == "") then
         return nil
     end
+    logger.trace(anyTourUrl)
 
     local idxSlash = 1
     local count = 0
@@ -202,7 +209,13 @@ local function getTourID(anyTourUrl)
         if (count == 4) then
             idxSlash = string.find(anyTourUrl, "/", idxSlash)
             if (idxSlash == nil) then
-                id = currentSub
+                local idxHash=1
+                idxHash = string.find(currentSub, "#", idxHash)
+                if ( idxHash == nil) then
+                    id = currentSub
+                else
+                    id = string.sub(currentSub, 1, idxHash - 1)
+                end
             else
                 idxSlash = string.find(currentSub, "/")
                 if (idxSlash ~= nil) then
