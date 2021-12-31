@@ -10,9 +10,27 @@ At the time the API of Komoot does not support upload of photos. Therefore, this
 publishing service.
 
 ## Installation
-* Download the zip archive for your operating system from [GitHub](https://github.com/sto3014/LRKomoot/tree/main/target).
-* Extract the archive into your home directory.
-* Restart Lightroom
+1. Download the zip archive for your operating system from [GitHub](https://github.com/sto3014/LRKomoot/archive/refs/tags/1.1.1.1.zip).
+2. Extract the archive in the download folder
+3. Copy plug-in and resources into the configuration folder of Lightroom
+  1. On Windows  
+     Goto ```Downloads/LRKomoot-1.1.1.1``` and execute install.bat.
+     Install.bat copies the plug-in into:
+     ```
+     <User Home>\AppData\Roaming\Adobe\Lightroom\Modules\LRKomoot.lrplugin
+     ```
+  2. On macOS
+     Open a terminal window, change to ```Downloads/LRKomoot-1.1.1.1``` and execute install.sh:
+      ```
+      -> ~ cd Downloads/LRKomoot-1.1.1.1
+      -> ./install.sh 
+      ```
+     Install.sh copies the plug-in into:
+      ``` 
+      ~/Library/Application Support/Adobe/Lightroom/Modules/LRKomoot.lrplugin
+      ```
+
+4. Restart Lightroom
 
 ## Komoot metadata
 The new metadata set Komoot is made available.

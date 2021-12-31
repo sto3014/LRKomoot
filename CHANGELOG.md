@@ -39,3 +39,10 @@ The display name for two metadata fields were renamed:
 ### Changed
 ### Fixed
 
+## [1.1.1.1] - 2021-12-31
+Only the documentation has changed. No need to update.
+### Added
+### Changed
+### Fixed
+Fix installation chapter in README.md 
+
