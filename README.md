@@ -14,15 +14,15 @@ publishing service.
 2. Extract the archive in the download folder
 3. Copy plug-in and resources into the configuration folder of Lightroom
   1. On Windows  
-     Goto ```Downloads/LRKomoot-1.1.1.1``` and execute install.bat.
+     Goto ```Downloads/LRKomoot-1.1.2.0``` and execute install.bat.
      Install.bat copies the plug-in into:
      ```
      <User Home>\AppData\Roaming\Adobe\Lightroom\Modules\LRKomoot.lrplugin
      ```
   2. On macOS
-     Open a terminal window, change to ```Downloads/LRKomoot-1.1.1.1``` and execute install.sh:
+     Open a terminal window, change to ```Downloads/LRKomoot-1.1.2.0``` and execute install.sh:
       ```
-      -> ~ cd Downloads/LRKomoot-1.1.1.1
+      -> ~ cd Downloads/LRKomoot-1.1.2.0
       -> ./install.sh 
       ```
      Install.sh copies the plug-in into:
@@ -53,8 +53,8 @@ the checkbox is selected.
 
 After the export the Komoot photo annotation page will be opened. For this to work, you must set the
 tour URL field. This URL must point to a valid tour in Komoot. Examples:
-* https://www.komoot.de/tour/12345678
-* https://www.komoot.de/tour/12345678/zoom
+* https://www.komoot.com/de-de/tour/12345678
+* https://www.komoot.com/de-de/tour/12345678/zoom
 
 ## Library filter
 A filter named *Komoot* uses the *Date*, the *Tour Name* and the *Tour URL*. Even when 
