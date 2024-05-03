@@ -8,6 +8,7 @@ local LrDialogs = import 'LrDialogs'
 local LrPrefs = import("LrPrefs")
 local LrTasks = import("LrTasks")
 local logger = require("Logger")
+local Utils = require("Utils")
 
 -------------------------------------------------------------------------------
 --- Properties
@@ -126,6 +127,54 @@ local function getSubFolder()
     return subFolder
 end
 
+----------------------------------------------------------------------------------
+--- Function extract the tour id out of a tour URL.
+--- Returns
+---     The tour id
+---     nil, if no id could be found.
+-------------------------------------------------------------------------------------
+local function geIDAndLocale(anyTourUrl)
+    logger.trace("Enter getTourID")
+
+    if (anyTourUrl == nil or anyTourUrl == "") then
+        return nil
+    end
+
+    -- old url was www.komoot.de
+    anyTourUrl = string.gsub(anyTourUrl, "www.komoot.de/", "www.komoot.com/de-de/")
+
+    logger.trace(anyTourUrl)
+
+    local idxSlash = 1
+    local count = 0
+    local id = nil
+    local locale = nil
+
+    local tokens = Utils.split(anyTourUrl, "/")
+    locale = tokens[3]
+    logger.trace("locale=" .. tostring(locale))
+    id = tokens[5]
+    local idxHash=1
+    idxHash = string.find(id, "#", idxHash)
+    if ( idxHash ~= nil) then
+        id = string.sub(id, 1, idxHash - 1)
+    end
+    logger.trace("id=" .. id)
+
+
+    if (id == nil or id == "" or id:match("^%-?%d+$") == nil) then
+        logger.trace("Tour ID '" .. tostring(id) .. "' is  not valid")
+        logger.trace("Exit getTourID")
+        return nil, nil
+    end
+    if (locale == nil) then
+        logger.trace("Locale is not valid")
+        logger.trace("Exit getTourID")
+        return nil, nil
+    end
+
+    return id, locale
+end
 -------------------------------------------------------------------------------
 --- Function to convert a tour URL to a URL which points to the annotation page
 --- of the tour
@@ -146,97 +195,18 @@ local function getAnnotateURL(anyTourUrl)
         return nil
     end
 
-    -- LrMobdebug.on()
-
-    local idxSlash = 1
-    local count = 0
-    local annotateURL
-    while (true) do
-        idxSlash = string.find(anyTourUrl, "/", idxSlash)
-        if (idxSlash == nil) then
-            break
-        end
-        idxSlash = idxSlash + 1
-        local currentSub = string.sub(anyTourUrl, idxSlash)
-        logger.trace("Idx = " .. tostring(idxSlash) .. ", substring: " .. currentSub)
-        count = count + 1
-        if (count == 4) then
-            idxSlash = string.find(anyTourUrl, "/", idxSlash)
-            if (idxSlash == nil) then
-                local idxHash=1
-                idxHash = string.find(anyTourUrl, "#", idxHash)
-                if ( idxHash == nil) then
-                    annotateURL = anyTourUrl .. "/annotate/photos"
-                else
-                    annotateURL = string.sub(anyTourUrl, 1, idxHash - 1) .. "/annotate/photos"
-                end
-            else
-                annotateURL = string.sub(anyTourUrl, 1, idxSlash - 1) .. "/annotate/photos"
-            end
-            break
-        end
+    anyTourUrl = string.gsub(anyTourUrl, "komoot.de/", "komoot.com/de-de/")
+    local id, locale = geIDAndLocale(anyTourUrl)
+    if ( id == nil) then
+        return nil
     end
 
+    local annotateURL = "https://www.komoot.com/" .. locale .. "/tour/" .. id .. "/annotate/photos"
+    logger.trace("annotateURL=" .. annotateURL)
     logger.trace("Exit getAnnotateURL")
     return annotateURL
 end
 
-----------------------------------------------------------------------------------
---- Function extract the tour id out of a tour URL.
---- Returns
----     The tour id
----     nil, if no id could be found.
--------------------------------------------------------------------------------------
-local function getTourID(anyTourUrl)
-    logger.trace("Enter getTourID")
-    if (anyTourUrl == nil or anyTourUrl == "") then
-        return nil
-    end
-    logger.trace(anyTourUrl)
-
-    local idxSlash = 1
-    local count = 0
-    local id = nil
-    while (true) do
-        idxSlash = string.find(anyTourUrl, "/", idxSlash)
-        if (idxSlash == nil) then
-            break
-        end
-        idxSlash = idxSlash + 1
-        local currentSub = string.sub(anyTourUrl, idxSlash)
-        logger.trace("Idx = " .. tostring(idxSlash) .. ", substring: " .. currentSub)
-        count = count + 1
-        if (count == 4) then
-            idxSlash = string.find(anyTourUrl, "/", idxSlash)
-            if (idxSlash == nil) then
-                local idxHash=1
-                idxHash = string.find(currentSub, "#", idxHash)
-                if ( idxHash == nil) then
-                    id = currentSub
-                else
-                    id = string.sub(currentSub, 1, idxHash - 1)
-                end
-            else
-                idxSlash = string.find(currentSub, "/")
-                if (idxSlash ~= nil) then
-                    id = string.sub(currentSub, 1, idxSlash - 1)
-                end
-            end
-            break
-        end
-    end
-
-    if (id == nil or id == "" or id:match("^%-?%d+$") == nil) then
-        logger.trace("Tour ID '" .. tostring(id) .. "' is  not valid")
-        logger.trace("Exit getTourID")
-        return nil
-    else
-        logger.trace("Tour ID: " .. tostring(id))
-        logger.trace("Exit getTourID")
-        return id
-    end
-
-end
 
 -------------------------------------------------------------------------------
 --- Function determines the unique tour URL
@@ -252,11 +222,9 @@ end
 local function getUniqueTourURL()
     logger.trace("Enter getUniqueTourURL")
 
-    local activeCatalog = LrApplication.activeCatalog()
-    local photos = activeCatalog:getTargetPhotos()
-    local firstValidURL
+    local photos = LrApplication.activeCatalog():getTargetPhotos()
+    local firstValidURL = nil
     local prevID = ""
-    local tourID
     local differentTours = false
     local invalidTourIDs = 0
     local notSetTourIDs = 0
@@ -266,7 +234,8 @@ local function getUniqueTourURL()
         local tourURL = (photo:getPropertyForPlugin(PluginInit.pluginID, 'komootUrl'))
         logger.trace("Tour URL: " .. tostring(tourURL))
         if (tourURL ~= nil and tourURL ~= "") then
-            tourID = getTourID(tourURL)
+            local tourID
+            tourID = geIDAndLocale(tourURL)
             if (tourID ~= nil) then
                 firstValidURL = tourURL
                 if (prevID == "") then
@@ -407,7 +376,6 @@ end
 -------------------------------------------------------------------------------------
 function exportServiceProvider.processRenderedPhotos(functionContext,
                                                      exportContext)
-
     local prefs = LrPrefs.prefsForPlugin()
     if prefs.hasErrors or prefs.exportCanceledByUser then
         return

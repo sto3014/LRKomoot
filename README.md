@@ -10,7 +10,7 @@ At the time the API of Komoot does not support upload of photos. Therefore, this
 publishing service.
 
 ## Installation
-1. Download the zip archive for your operating system from [GitHub](https://github.com/sto3014/LRKomoot/archive/refs/tags/1.1.1.1.zip).
+1. Download the zip archive for your operating system from [GitHub](https://github.com/sto3014/LRKomoot/archive/refs/tags/1.1.2.0.zip).
 2. Extract the archive in the download folder
 3. Copy plug-in and resources into the configuration folder of Lightroom
   1. On Windows  

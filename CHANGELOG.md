@@ -46,3 +46,9 @@ Only the documentation has changed. No need to update.
 ### Fixed
 Fix installation chapter in README.md 
 
+## [1.1.2.0] - 2024-05-03
+
+### Fixed
+
+* Support for new Komoot URL (www.komoot.com/<LOCALE>)
+
